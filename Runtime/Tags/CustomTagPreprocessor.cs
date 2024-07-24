@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using TMPro;
 
@@ -56,10 +57,22 @@ namespace Oneiromancer.TMP.Tags
             if (!IsTag(text, rawTextIndex, out lastIndex)) return false;
             string tag = text.Substring(rawTextIndex + 1, lastIndex - rawTextIndex - 1);
 
+            string parameter = "";
+            int parameterIndex = tag.IndexOf("=");
+
+            if(parameterIndex != -1)
+            {
+                parameter = tag.Substring(parameterIndex + 1);
+                tag = tag.Substring(0, parameterIndex);
+            }
+
             if (tag[0] != '/')
             {
                 if (!_possibleTags.Contains(tag)) return false;
-                _tagInfos.Add(new TagInfo(tag, builderIdx));
+
+                var newTag = new TagInfo(tag, builderIdx);
+                newTag.AddParameter(parameter);
+                _tagInfos.Add(newTag);
             }
             else
             {

@@ -10,7 +10,7 @@ namespace Oneiromancer.TMP.Tags
     public class TagParser : MonoBehaviour
     {
         [SerializeField] private TMP_Text _text;
-        [SerializeField] private BaseTextEffectSo[] _tagEffects;
+        [SerializeField] private BaseTextEffect[] _tagEffects;
 
         private CustomTagPreprocessor _currentPreprocessor;
         private bool _inPreviewMode;
@@ -47,7 +47,7 @@ namespace Oneiromancer.TMP.Tags
                 foreach (var processor in _tagEffects)
                 {
                     if (!tagInfo.IsTagEqual(processor.Tag)) continue;
-                    processor.ProcessEffect(_text, tagInfo.StartIndex, tagInfo.LastIndex);
+                    processor.ProcessEffect(_text, tagInfo.StartIndex, tagInfo.LastIndex, tagInfo.Parameter);
                 }
             }
             _text.UpdateVertexData(TMP_VertexDataUpdateFlags.All);

@@ -2,17 +2,19 @@
 
 namespace Oneiromancer.TMP.Tags
 {
-    /// Custom tag info: it's name, first and last affected text index.
+    /// Custom tag info: it's name, first and last affected text index, and its parameter.
     [System.Serializable]
     public class TagInfo
     {
         public string Tag => _tag;
         public int StartIndex => _startIndex;
         public int LastIndex => _lastIndex;
+        public string Parameter => _parameter;
 
         [SerializeField] private string _tag;
         [SerializeField] private int _startIndex;
         [SerializeField] private int _lastIndex = -1;
+        [SerializeField] private string _parameter = "";
 
         private int _tagHash;
 
@@ -37,6 +39,11 @@ namespace Oneiromancer.TMP.Tags
         public bool IsTagEqual(string tag)
         {
             return tag.GetHashCode() == _tagHash;
+        }
+
+        public void AddParameter(string newParameter)
+        {
+            _parameter = newParameter;
         }
     }
 }

@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Effects
 {
+    [CreateAssetMenu(menuName = "Text Effects/Wave")]
     [System.Serializable]
     public class WaveTextEffect : BaseTextEffect
     {
-        public override string Tag => "wave";
         
         [SerializeField] private float _speed;
         [SerializeField] private Vector2 _frequency;
         [SerializeField] private Vector2 _amplitude = Vector2.one;
         
-        protected override void ApplyToCharacter(TMP_Text text, TMP_CharacterInfo charInfo)
+        protected override void ApplyToCharacter(TMP_Text text, TMP_CharacterInfo charInfo, string parameter)
         {
             int materialIndex = charInfo.materialReferenceIndex;
             Vector3[] newVertices = text.textInfo.meshInfo[materialIndex].vertices;

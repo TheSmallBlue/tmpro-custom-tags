@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Effects
 {
+    [CreateAssetMenu(menuName = "Text Effects/Rainbow")]
     [System.Serializable]
     public class RainbowTextEffect : BaseTextEffect
     {
-        public override string Tag => "rainbow";
         
         [SerializeField] private float _speed;
         [SerializeField] private float _frequency;
         
-        protected override void ApplyToCharacter(TMP_Text text, TMP_CharacterInfo charInfo)
+        protected override void ApplyToCharacter(TMP_Text text, TMP_CharacterInfo charInfo, string parameter)
         {
             int materialIndex = charInfo.materialReferenceIndex;
             Color32[] newColors = text.textInfo.meshInfo[materialIndex].colors32;
