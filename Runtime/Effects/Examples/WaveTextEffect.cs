@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Effects
 {
-    [CreateAssetMenu(menuName = "Text Effects/Wave")]
+    [CreateAssetMenu(menuName = "CustomTMPTags/Effects/Wave")]
     [System.Serializable]
     public class WaveTextEffect : BaseTextEffect
     {

@@ -7,10 +7,11 @@ namespace Oneiromancer.TMP.Tags
 {
     /// Component that can process custom tags in TMP_Text, given SO settings for each tag
     [ExecuteAlways]
-    public class TagParser : MonoBehaviour
+    public class EffectsTagParser : MonoBehaviour
     {
         [SerializeField] private TMP_Text _text;
-        [SerializeField] private BaseTextEffect[] _tagEffects;
+        [SerializeField] private TagCollection _tags;
+        private BaseTextEffect[] _tagEffects => _tags.effects;
 
         private CustomTagPreprocessor _currentPreprocessor;
         private bool _inPreviewMode;
@@ -55,9 +56,18 @@ namespace Oneiromancer.TMP.Tags
 
         private void SetParser()
         {
-            var possibleTags = _tagEffects.Select(x => x.Tag).ToList();
-            _currentPreprocessor = new CustomTagPreprocessor(possibleTags);
-            _text.textPreprocessor = _currentPreprocessor;
+            var possibleTags = _tags.AllTags;
+
+            if (_text.textPreprocessor is CustomTagPreprocessor)
+            {
+                _currentPreprocessor = _text.textPreprocessor as CustomTagPreprocessor;
+            }
+            else
+            {
+                _currentPreprocessor = new CustomTagPreprocessor(possibleTags);
+                _text.textPreprocessor = _currentPreprocessor;
+            }
+            
             _text.ForceMeshUpdate();
         }
 

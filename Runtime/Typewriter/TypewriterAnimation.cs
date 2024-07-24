@@ -7,8 +7,9 @@ namespace Oneiromancer.TMP.Typewriter
     /// Component that will render given text character-by-character, preserving custom tag effects.
     public class TypewriterAnimation : MonoBehaviour
     {
-        public event System.Action TickEvent;
+        public event System.Func<int, IEnumerator> TickEvent;
         public event System.Action<char> CharacterRenderedEvent;
+        public event System.Action<string> TextChangedEvent;
         
         [SerializeField] private TMP_Text _text;
         [SerializeField, Min(0)] private float _delayBetweenCharacters = 0.1f;
@@ -35,9 +36,21 @@ namespace Oneiromancer.TMP.Typewriter
         }
 
         /// Play typewriter animation, starting with the first character
-        public void Play()
+        public Coroutine Play(string newString = "")
         {
+            Stop();
+
+            if(newString != "")
+            {
+                _text.text = newString;
+                _text.ForceMeshUpdate();
+            }
+
+            TextChangedEvent?.Invoke(newString);
+
             _coroutine ??= StartCoroutine(TypewriterCoroutine());
+
+            return _coroutine;
         }
 
         /// Pause typewriter animation
@@ -60,6 +73,13 @@ namespace Oneiromancer.TMP.Typewriter
             _coroutine ??= StartCoroutine(TypewriterCoroutine(_text.maxVisibleCharacters));
         }
 
+        /// Stop and show the completed animation
+        public void Complete()
+        {
+            Pause();
+            _text.maxVisibleCharacters = _text.textInfo.characterCount;
+        }
+
         private IEnumerator TypewriterCoroutine(int startIdx = 0)
         {
             _text.ForceMeshUpdate();
@@ -69,7 +89,7 @@ namespace Oneiromancer.TMP.Typewriter
             
             for (int i = startIdx; i < count; i++)
             {
-                Tick(i);
+                yield return Tick(i);
                 
                 var currentChar = _text.textInfo.characterInfo[i].character;
                 CharacterRenderedEvent?.Invoke(currentChar);
@@ -85,12 +105,12 @@ namespace Oneiromancer.TMP.Typewriter
             }
         }
 
-        private void Tick(int index)
+        private IEnumerator Tick(int index)
         {
             _cache = _text.textInfo.CopyMeshInfoVertexData();    //Cache vertex information before redrawing mesh
             
             _text.maxVisibleCharacters = index + 1;
-            TickEvent?.Invoke();
+            return TickEvent?.Invoke(index);
         }
 
         private void RestoreCache()

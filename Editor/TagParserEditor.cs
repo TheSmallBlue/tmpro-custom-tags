@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Tags
 {
-    [CustomEditor(typeof(TagParser))]
+    [CustomEditor(typeof(EffectsTagParser))]
     public class TagParserEditor : Editor
     {
         private bool _inPreview;
         
         public override void OnInspectorGUI()
         {
-            var parser = target as TagParser;
+            var parser = target as EffectsTagParser;
             base.OnInspectorGUI();
             
             if (!_inPreview)
@@ -34,7 +34,7 @@ namespace Oneiromancer.TMP.Tags
         private void OnDisable()
         {
             if (!_inPreview) return;
-            var parser = target as TagParser;
+            var parser = target as EffectsTagParser;
             parser.ResetParser();
             _inPreview = false;
         }
