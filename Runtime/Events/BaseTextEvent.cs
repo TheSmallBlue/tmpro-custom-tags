@@ -10,29 +10,10 @@ namespace Oneiromancer.TMP.Events
     {
         public string Tag;
 
-        TypewriterAnimation _target;
-        int _trigger;
-        string _parameter;
 
-        public void ProcessEvent(TypewriterAnimation typewriter, int triggerIndex, string parameter, ref System.Func<int, IEnumerator> tickEvent)
+        public System.Func<int, IEnumerator> ProcessEvent(TypewriterAnimation typewriter, int triggerIndex, string parameter)
         {
-            _target = typewriter;
-            _trigger = triggerIndex;
-            _parameter = parameter;
-
-            tickEvent += TriggerCheck;
-        }
-
-        private IEnumerator TriggerCheck(int index)
-        {
-            if (index == _trigger)
-            {
-                yield return TriggerEvent(_target, _parameter);
-            }
-            else 
-            {
-                yield return null;
-            }
+            return (i) => i == triggerIndex ? TriggerEvent(typewriter, parameter) : null;
         }
 
         protected abstract IEnumerator TriggerEvent(TypewriterAnimation typewriter, string parameter);

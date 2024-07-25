@@ -7,9 +7,12 @@ namespace Oneiromancer.TMP.Typewriter
     /// Component that will render given text character-by-character, preserving custom tag effects.
     public class TypewriterAnimation : MonoBehaviour
     {
-        public event System.Func<int, IEnumerator> TickEvent;
+        public event System.Action<int> TickEvent;
+        public event System.Func<int, IEnumerator> TickCorutine;
         public event System.Action<char> CharacterRenderedEvent;
         public event System.Action<string> TextChangedEvent;
+
+        public bool Finished = false;
         
         [SerializeField] private TMP_Text _text;
         [SerializeField, Min(0)] private float _delayBetweenCharacters = 0.1f;
@@ -48,6 +51,8 @@ namespace Oneiromancer.TMP.Typewriter
 
             TextChangedEvent?.Invoke(newString);
 
+            Finished = false;
+
             _coroutine ??= StartCoroutine(TypewriterCoroutine());
 
             return _coroutine;
@@ -64,6 +69,7 @@ namespace Oneiromancer.TMP.Typewriter
         public void Stop()
         {
             Pause();
+            Finished = true;
             _text.maxVisibleCharacters = 0;
         }
         
@@ -89,8 +95,9 @@ namespace Oneiromancer.TMP.Typewriter
             
             for (int i = startIdx; i < count; i++)
             {
-                yield return Tick(i);
-                
+                Tick(i);
+                yield return TickCorutine(i);
+
                 var currentChar = _text.textInfo.characterInfo[i].character;
                 CharacterRenderedEvent?.Invoke(currentChar);
                 
@@ -103,14 +110,16 @@ namespace Oneiromancer.TMP.Typewriter
                 
                 yield return new WaitForSeconds(time);
             }
+
+            Finished = true;
         }
 
-        private IEnumerator Tick(int index)
+        private void Tick(int index)
         {
             _cache = _text.textInfo.CopyMeshInfoVertexData();    //Cache vertex information before redrawing mesh
             
             _text.maxVisibleCharacters = index + 1;
-            return TickEvent?.Invoke(index);
+            TickEvent?.Invoke(index);
         }
 
         private void RestoreCache()

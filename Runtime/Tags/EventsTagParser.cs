@@ -19,33 +19,36 @@ namespace Oneiromancer.TMP.Tags
 
         private CustomTagPreprocessor _currentPreprocessor;
 
-        private System.Func<int, IEnumerator> _tickEvent;
+        private List<System.Func<int, IEnumerator>> _tickEvents = new List<System.Func<int, IEnumerator>>();
 
         private void Awake() 
         {
             _typewriter.TextChangedEvent += OnTextChanged;
-            _typewriter.TickEvent += OnTick;
+            _typewriter.TickCorutine += OnTick;
 
             SetParser();
         }
 
         private void OnTextChanged(string newText)
         {
-            _tickEvent = null;
-
+            _tickEvents.Clear();
+            
             foreach (var tagInfo in _currentPreprocessor.TagInfos)
             {
                 foreach (var processor in _tagEvents)
                 {
                     if(!tagInfo.IsTagEqual(processor.Tag)) continue;
-                    processor.ProcessEvent(_typewriter, tagInfo.StartIndex, tagInfo.Parameter, ref _tickEvent);
+                    _tickEvents.Add(processor.ProcessEvent(_typewriter, tagInfo.StartIndex, tagInfo.Parameter));
                 }
             }
         }
 
         private IEnumerator OnTick(int index)
         {
-            yield return _tickEvent?.Invoke(index);
+            foreach (var tickEvent in _tickEvents)
+            {
+                yield return tickEvent(index);
+            }
         }
 
         private void OnValidate() 

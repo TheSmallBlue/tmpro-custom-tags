@@ -12,6 +12,8 @@ namespace Oneiromancer.TMP.Events
     {
         protected override IEnumerator TriggerEvent(TypewriterAnimation typewriter, string parameter)
         {
+            if(parameter == "") yield return null;
+
             float waitTime = float.Parse(parameter);
 
             yield return new WaitForSeconds(waitTime);
