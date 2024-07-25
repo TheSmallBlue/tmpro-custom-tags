@@ -25,10 +25,6 @@ namespace Oneiromancer.TMP.Typewriter
         private Coroutine _coroutine;
         private TMP_MeshInfo[] _cache;
 
-        // Subscribe to TMP event of redrawing mesh
-        private void OnEnable() => TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTMProChanged);
-        private void OnDisable() => TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTMProChanged);
-
         private void Start()
         {
             _text.maxVisibleCharacters = 0;
@@ -128,23 +124,6 @@ namespace Oneiromancer.TMP.Typewriter
             
             _text.maxVisibleCharacters = index + 1;
             TickEvent?.Invoke(index);
-        }
-
-        private void RestoreCache()
-        {
-            if (_cache == null) return;
-            
-            for (int i = 0; i < _text.textInfo.meshInfo.Length; i++)
-            {
-                _text.textInfo.meshInfo[i].mesh.vertices = _cache[i].vertices;    //Restore vertices positions
-                _text.textInfo.meshInfo[i].mesh.colors32 = _cache[i].colors32;    //Restore vertices colors
-                _text.UpdateGeometry(_text.textInfo.meshInfo[i].mesh, i);
-            }
-        }
-        
-        private void OnTMProChanged(Object obj)
-        {
-            if (obj == _text) RestoreCache();
         }
     }
 }
