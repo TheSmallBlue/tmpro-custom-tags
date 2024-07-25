@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Effects
 {
-    [CreateAssetMenu(menuName = "CustomTMPTags/Effects/Rainbow")]
+    [CreateAssetMenu(menuName = "Text Tags/Effects/Rainbow")]
     [System.Serializable]
     public class RainbowTextEffect : BaseTextEffect
     {

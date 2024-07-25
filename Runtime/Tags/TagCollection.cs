@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Tags
 {
-    [CreateAssetMenu(menuName = "CustomTMPTags/TagCollection")]
+    [CreateAssetMenu(menuName = "Text Tags/TagCollection")]
     [System.Serializable]
     public class TagCollection : ScriptableObject
     {

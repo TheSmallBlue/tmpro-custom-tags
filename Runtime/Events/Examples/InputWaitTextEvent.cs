@@ -4,9 +4,9 @@ using Oneiromancer.TMP.Events;
 using Oneiromancer.TMP.Typewriter;
 using UnityEngine;
 
-namespace Oneiromancer.TMP
+namespace Oneiromancer.TMP.Events
 {
-    [CreateAssetMenu(menuName = "CustomTMPTags/Events/WaitForInput")]
+    [CreateAssetMenu(menuName = "Text Tags/Events/WaitForInput")]
     [System.Serializable]
     public class InputWaitTextEvent : BaseTextEvent
     {

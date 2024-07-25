@@ -20,6 +20,8 @@ namespace Oneiromancer.TMP.Typewriter
         [SerializeField] private CharacterDelayOverride[] _delayOverrides;
         [SerializeField] private bool _playOnStart;
 
+        private float _speedMultiplier;
+
         private Coroutine _coroutine;
         private TMP_MeshInfo[] _cache;
 
@@ -53,6 +55,7 @@ namespace Oneiromancer.TMP.Typewriter
 
             Finished = false;
 
+            _speedMultiplier = 1;
             _coroutine ??= StartCoroutine(TypewriterCoroutine());
 
             return _coroutine;
@@ -86,6 +89,11 @@ namespace Oneiromancer.TMP.Typewriter
             _text.maxVisibleCharacters = _text.textInfo.characterCount;
         }
 
+        public void ChangeSpeed(float amount)
+        {
+            _speedMultiplier = amount;
+        }
+
         private IEnumerator TypewriterCoroutine(int startIdx = 0)
         {
             _text.ForceMeshUpdate();
@@ -101,7 +109,7 @@ namespace Oneiromancer.TMP.Typewriter
                 var currentChar = _text.textInfo.characterInfo[i].character;
                 CharacterRenderedEvent?.Invoke(currentChar);
                 
-                var time = _delayBetweenCharacters;
+                var time = _delayBetweenCharacters * _speedMultiplier;
                 foreach (var characterOverride in _delayOverrides)
                 {
                     if (characterOverride.Contains(currentChar)) time = characterOverride.TimeDelay;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Oneiromancer.TMP.Events
 {
-    [CreateAssetMenu(menuName = "CustomTMPTags/Events/Wait")]
+    [CreateAssetMenu(menuName = "Text Tags/Events/Wait")]
     [System.Serializable]
     public class WaitTextEvent : BaseTextEvent
     {
